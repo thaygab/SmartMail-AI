@@ -1,5 +1,6 @@
 from app.services.gemini_service import GeminiService
 from app.services.prompt_service import PromptService
+from app.schemas.email_schema import EmailResponse
 
 class EmailClassifierService:
     """
@@ -35,4 +36,16 @@ class EmailClassifierService:
     {email}
     """
         response = self.gemini_service.generate(full_prompt)
-        return response
+
+        lines = response.split("\n")
+
+        categoria = lines[0].replace("Categoria:", "").strip()
+        prioridade = lines[1].replace("Prioridade:", "").strip()
+        resumo = lines[2].replace("Resumo:", "").strip()
+
+        return EmailResponse(
+            categoria=categoria,
+            prioridade=prioridade,
+            resumo=resumo,
+            acao_sugerida="Nenhuma ação sugerida."
+        )
