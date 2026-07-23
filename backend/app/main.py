@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 
+from app.api.email_routes import router as email_router
+
 from app.schemas.email_schema import EmailRequest
 from app.services.email_classifier_service import EmailClassifierService
 
@@ -9,9 +11,7 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Instância do serviço
-service = EmailClassifierService()
-
+app.include_router(email_router)
 
 @app.get("/")
 def root():

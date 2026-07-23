@@ -1,5 +1,4 @@
-from pydantic import BaseModel
-
+from pydantic import BaseModel, Field
 
 class EmailRequest(BaseModel):
     """
@@ -8,7 +7,11 @@ class EmailRequest(BaseModel):
     Contém o texto do e-mail que será analisado pela IA.
     """
 
-    email: str
+    email: str = Field(
+        min_length=10,
+        max_length=5000,
+        description="Texto do e-mail que será classificado."
+    )
 
 
 class EmailResponse(BaseModel):

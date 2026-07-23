@@ -1,6 +1,7 @@
 from app.services.gemini_service import GeminiService
 from app.services.prompt_service import PromptService
 from app.schemas.email_schema import EmailResponse
+from fastapi import HTTPException
 
 class EmailClassifierService:
     """
@@ -25,27 +26,38 @@ class EmailClassifierService:
 
         Por enquanto, retorna uma resposta simulada.
         """
+        try:
+           prompt = self.prompt_service.load_prompt("email_classifier")
 
-        prompt = self.prompt_service.load_prompt("email_classifier")
-
-        full_prompt = f"""
+           full_prompt = f"""
     {prompt}
 
     E-mail para análise:
 
     {email}
     """
-        response = self.gemini_service.generate(full_prompt)
+           response = self.gemini_service.generate(full_prompt)
 
-        lines = response.split("\n")
+           print(response)
 
-        categoria = lines[0].replace("Categoria:", "").strip()
-        prioridade = lines[1].replace("Prioridade:", "").strip()
-        resumo = lines[2].replace("Resumo:", "").strip()
+           lines = response.split("\n")
 
-        return EmailResponse(
-            categoria=categoria,
-            prioridade=prioridade,
-            resumo=resumo,
-            acao_sugerida="Nenhuma ação sugerida."
-        )
+           categoria = lines[0].replace("Categoria:", "").strip()
+           prioridade = lines[1].replace("Prioridade:", "").strip()
+           resumo = lines[2].replace("Resumo:", "").strip()
+           acao_sugerida = lines[3].replace("Ação sugerida:", "").strip()
+
+           return EmailResponse(
+               categoria=categoria,
+               prioridade=prioridade,
+               resumo=resumo,
+               acao_sugerida=acao_sugerida
+
+            )
+        except Exception as e:
+            print(f"Erro na classificação: {e}")
+
+            raise HTTPException(
+                status_code=500,
+                detail="Não foi possível classificar o e-mail no momento"
+            )

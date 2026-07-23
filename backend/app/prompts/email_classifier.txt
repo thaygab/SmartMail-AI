@@ -4,7 +4,8 @@ Sua tarefa é analisar o e-mail recebido e responder seguindo EXATAMENTE o forma
 
 Categoria: <categoria>
 Prioridade: <Baixa, Média ou Alta>
-Resumo: <resuma o e-mail em até 2 frases>
+Resumo: <resuma o e-mail em apenas 1 frase objetiva>
+Ação sugerida: <informe qual ação deve ser tomada pelo setor responsável>
 
 Categorias permitidas:
 
